@@ -1,0 +1,29 @@
+name: Publish nuget package
+
+on:
+  push:
+    tags: v*
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get version from tag
+      id: get_version
+      # "refs/tags/v" is 11 characters
+      run: |
+        versionNumber=${GITHUB_REF:11}
+        echo "::set-output name=version_number::$versionNumber"
+
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+
+    - name: Create nuget package
+      run: dotnet pack -c Release ClosedTypeHierarchyDiagnosticSuppressor -o package -p:Version=${{ steps.get_version.outputs.version_number }}
+    
+    - name: Push nuget package to nuget.org
+      run: dotnet nuget push package/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json

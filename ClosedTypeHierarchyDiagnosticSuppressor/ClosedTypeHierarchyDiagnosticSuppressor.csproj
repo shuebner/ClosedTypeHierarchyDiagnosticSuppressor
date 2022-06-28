@@ -10,6 +10,8 @@
 	<__CurrentYear>$([System.DateTime]::Now.Year)</__CurrentYear>
 	<Copyright>Copyright (C) Sven Hübner 2022 - $(__CurrentYear)</Copyright>
 	<Authors>Sven Hübner</Authors>
+	
+	<PackageId>SvSoft.Analyzers.ClosedTypeHerarchyDiagnosticSuppression</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
