@@ -2,6 +2,11 @@
 
 Enhances the exhaustiveness check of the C# compiler for switch statements and switch expressions on structurally closed typed hierarchies aka discriminated unions.
 
+Get on [nuget.org](https://www.nuget.org/packages/SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression) or just include with
+```csproj
+<PackageReference Include="SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression" Version="1.0.0" PrivateAssets="All" />
+```
+
 It is implemented as a `DiagnosticSuppressor`.
 It suppresses the compiler's own exhaustiveness warnings only when it is really, really sure that the switch is exhaustive.
 It suppresses IDE0010, IDE0072 and CS8524.
