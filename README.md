@@ -11,7 +11,7 @@ There are no attributes and no configuration.
 
 It is implemented as a `DiagnosticSuppressor`.
 It suppresses the compiler's own exhaustiveness warnings only when it is really, really sure that the switch is exhaustive.
-It suppresses IDE0010, IDE0072 and CS8524.
+It suppresses IDE0010, IDE0072 and CS8509.
 
 At the moment it is as paranoid as possible to prevent accidental misuse.
 As such, it will only suppress exhaustiveness warnings on provably closed type hierarchies with an abstract base class with private constructor and sealed nested classes inheriting from the base class.
