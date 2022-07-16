@@ -34,7 +34,7 @@ public static int Get(Root root) => root switch
 
 Get on [nuget.org](https://www.nuget.org/packages/SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression) or just include with
 ```csproj
-<PackageReference Include="SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression" Version="1.0.0" PrivateAssets="All" />
+<PackageReference Include="SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression" Version="1.0.1" PrivateAssets="All" />
 ```
 
 There are no attributes and no configuration.
