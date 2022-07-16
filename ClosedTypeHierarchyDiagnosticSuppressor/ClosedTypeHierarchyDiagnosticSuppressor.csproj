@@ -10,9 +10,17 @@
 	<__CurrentYear>$([System.DateTime]::Now.Year)</__CurrentYear>
 	<Copyright>Copyright (C) Sven Hübner 2022 - $(__CurrentYear)</Copyright>
 	<Authors>Sven Hübner</Authors>
-	
 	<PackageId>SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression</PackageId>
+    <PackageTags>discriminated unions, match, switch</PackageTags>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor/blob/main/LICENSE</PackageLicenseUrl>
+    <Description>Suppresses exhaustiveness warnings of switch statement and switch expressions when all cases of a "closed type hierarchy" are covered. See project URL for details. It suppresses IDE0010, IDE0072 and CS8509. It is NRT-aware.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
 
   <ItemGroup>
 	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.11.0" />
