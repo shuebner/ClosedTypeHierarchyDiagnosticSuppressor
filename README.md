@@ -1,5 +1,7 @@
 # Exhaustiveness check for Discriminated Unions
 
+If you are using [OneOf](https://github.com/mcintyre321/OneOf), you may want to check out my other repo [OneOfDiagnosticSuppressor](https://github.com/shuebner/OneOfDiagnosticSuppressor).
+
 This project enhances the exhaustiveness check of the C# compiler for switch statements and switch expressions on structurally closed typed hierarchies aka discriminated unions:
 
 ```csharp
