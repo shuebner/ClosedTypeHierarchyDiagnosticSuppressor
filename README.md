@@ -45,17 +45,42 @@ It will just do The Right Thing™.
 See the test samples for [switch statement](https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor/blob/main/ClosedTypeHierarchyDiagnosticSuppressor.Tests/SwitchStatementSuppressorTests.cs) and [switch expression](https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor/blob/main/ClosedTypeHierarchyDiagnosticSuppressor.Tests/SwitchExpressionSuppressorTests.cs) to see what is supported.
 I may add more documentation and examples in this README soon.
 
+# Development Experience
 
-## Features
+If you set diagnostic severity to error for diagnostics that may be suppressed by a diagnostic suppressor like this one, you may have to take additional action for a good development experience.
 
-### NRT-aware
+## Visual Studio
 
-### Base type matching support
+By default, Visual Studio does not run diagnostic suppressors when the build is implicitly triggered like by running a test.
+If you have errors that are suppressed by diagnostic suppressors, those builds will fail, e. g. preventing the test from running (unless you do an explicit build first).
+You can configure Visual Studio to always run analyzers (towards whom diagnostic suppressors are counted):
+
+![image](https://user-images.githubusercontent.com/1770684/182022215-23902b8a-2c01-4fe1-bb47-943fc7bda140.png)
+
+See also [here](https://developercommunity2.visualstudio.com/t/Test-run-fails-build-because-Diagnostic/10023425).
+
+## Rider
+
+[Rider does not support Diagnostic Suppressors](https://youtrack.jetbrains.com/issue/RSRP-481121) as of 2022-07-31.
+Your development experience may suffer.
+
+## Visual Studio Code
+
+[OmniSharp and thus Visual Studio Code does not support Diagnostic Suppressors](https://github.com/OmniSharp/omnisharp-roslyn/issues/1711) as of 2022-07-31.
+Your development experience may suffer.
+
+Thanks to [rutgersc](https://github.com/rutgersc) for [bringing this up](https://github.com/shuebner/OneOfDiagnosticSuppressor/issues/1).
+
+# Features
+
+## NRT-aware
+
+## Base type matching support
 
 It supports matching against base types (think of matching a `Result<TValue, TError>` against `IOk<TValue>`and `IFailure<TError>`.
 That would be treated as exhaustive.
 
-### Pattern matching support
+## Pattern matching support
 
 Pattern matching, including nested pattern matching is taken into account.
 
