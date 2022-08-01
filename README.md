@@ -45,6 +45,24 @@ It will just do The Right Thing™.
 See the test samples for [switch statement](https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor/blob/main/ClosedTypeHierarchyDiagnosticSuppressor.Tests/SwitchStatementSuppressorTests.cs) and [switch expression](https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor/blob/main/ClosedTypeHierarchyDiagnosticSuppressor.Tests/SwitchExpressionSuppressorTests.cs) to see what is supported.
 I may add more documentation and examples in this README soon.
 
+## Treating non-exhaustive switches as errors
+
+In your project, enable IDE0010 (for switch statements) and IDE0072 (for switch expressions, not strictly necessary because we have CS8509 anyway) like this:
+```csproj
+<PropertyGroup>
+  <!-- enables (among others) IDE0010 and IDE0072 -->
+  <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+</PropertyGroup>
+```
+
+In your `.editorconfig` configure the severity of the exhaustiveness diagnostics:
+```
+[*.cs]
+dotnet_diagnostic.IDE0010.severity = error
+dotnet_diagnostic.IDE0072.severity = error
+dotnet_diagnostic.CS8509.severity = error
+```
+
 # Development Experience
 
 If you set diagnostic severity to error for diagnostics that may be suppressed by a diagnostic suppressor like this one, you may have to take additional action for a good development experience.
