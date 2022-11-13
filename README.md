@@ -36,16 +36,17 @@ public static int Get(Root root) => root switch
 
 Get on [nuget.org](https://www.nuget.org/packages/SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression) or just include with
 ```csproj
-<PackageReference Include="SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression" Version="1.0.1" PrivateAssets="All" />
+<PackageReference Include="SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression" Version="1.1.0" PrivateAssets="All" />
 ```
 
 There are no attributes and no configuration.
 It will just do The Right Thing™.
 
 The only exception is the configuration for opting into treating type hierarchies based on `record` types as closed, even though [they are not because of their implicit protected copy constructor](https://svenhuebner-it.com/closed-type-hierarchies-with-records-not/).
+To suppress on records anyway, add the following in your `.editorconfig`:
 
 ```
-dotnet_diagnostic.CTH001.suppress_on_record_hierarchies
+dotnet_diagnostic.CTH001.suppress_on_record_hierarchies = true
 ```
 
 See the test samples for [switch statement](https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor/blob/main/ClosedTypeHierarchyDiagnosticSuppressor.Tests/SwitchStatementSuppressorTests.cs) and [switch expression](https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor/blob/main/ClosedTypeHierarchyDiagnosticSuppressor.Tests/SwitchExpressionSuppressorTests.cs) to see what is supported.
@@ -127,5 +128,5 @@ It suppresses IDE0010, IDE0072 and CS8509.
 At the moment it is as paranoid as possible to prevent accidental misuse.
 As such, it will only suppress exhaustiveness warnings on provably closed type hierarchies with an abstract base class with private constructor and sealed nested classes inheriting from the base class, see above.
 
-In particular, it will atm not suppress any warnings for record types because they could be inherited from outside via the protected copy constructor.
-I may add a flag to opt-in suppressing for records later, because it is such a common use-case and arguably low-risk.
+In particular, it will not by default suppress any warnings for record types because [they could be inherited from outside via the protected copy constructor](https://svenhuebner-it.com/closed-type-hierarchies-with-records-not/).
+You can however opt into suppressing for records (see above), because it is such a common use-case and arguably low-risk.
