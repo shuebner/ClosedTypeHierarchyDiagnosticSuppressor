@@ -40,6 +40,18 @@ abstract class Root<T>
 ";
     }
 
+    public static class ProtectedCopyConstructorOnly
+    {
+        public const string ImplicitProtectedCopyCtor = @"
+abstract record Root
+{
+    Root() {}
+    public sealed record Leaf1 : Root {}
+    public sealed record Leaf2 : Root {}
+}
+";
+    }
+
     public static class NotClosed
     {
         public const string RootNotAbstract = @"
@@ -60,10 +72,10 @@ abstract class Root
 }
 ";
 
-        public const string ImplicitProtectedCopyCtor = @"
-abstract record Root
+        public const string ProtectedCtorOtherThanCopyConstructor = @"
+abstract class Root
 {
-    Root() {}
+    protected Root() {}
     public sealed record Leaf1 : Root {}
     public sealed record Leaf2 : Root {}
 }
@@ -77,5 +89,23 @@ abstract class Root
     public sealed class Leaf2 : Root {}
 }
 ";
+
+        public const string ExplicitPrivateProtectedCopyCtor = @"
+    abstract class Root
+    {
+        private protected Root(Root root) {}
+        public sealed record Leaf1 : Root {}
+        public sealed record Leaf2 : Root {}
+    }
+    ";
+
+        public const string ExplicitProtectedCopyCtor = @"
+    abstract class Root
+    {
+        protected Root(Root root) {}
+        public sealed record Leaf1 : Root {}
+        public sealed record Leaf2 : Root {}
+    }
+    ";
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using SvSoft.Analyzers.ClosedTypeHierarchyDiagnosticSuppression;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -18,7 +19,7 @@ public sealed class SwitchStatementSuppressor : DiagnosticSuppressor
         id => new SuppressionDescriptor("CTH001", id, "every possible type of closed type hierarchy was matched without restrictions"));
 
     public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions { get; } = ImmutableArray.CreateRange(SuppressionDescriptorByDiagnosticId.Values);
-
+    
     public override void ReportSuppressions(SuppressionAnalysisContext context)
     {
         foreach (Diagnostic diagnostic in context.ReportedDiagnostics)
@@ -39,6 +40,8 @@ public sealed class SwitchStatementSuppressor : DiagnosticSuppressor
                     return;
                 }
 
+                bool allowRecords = context.AreRecordHierarchiesAllowed(node.SyntaxTree);
+
                 ExpressionSyntax switchee = switchStatement.Expression;
                 var switcheeModel = context.GetSemanticModel(switchee.SyntaxTree);
                 var switcheeTypeInfo = switcheeModel.GetTypeInfo(switchee);
@@ -47,7 +50,7 @@ public sealed class SwitchStatementSuppressor : DiagnosticSuppressor
                     return;
                 }
 
-                if (TypeHierarchyHelper.InterpretAsClosedTypeHierarchy(switcheeType) is not IEnumerable<INamedTypeSymbol> subtypes)
+                if (TypeHierarchyHelper.InterpretAsClosedTypeHierarchy(switcheeType, allowRecords) is not IEnumerable<INamedTypeSymbol> subtypes)
                 {
                     return;
                 }

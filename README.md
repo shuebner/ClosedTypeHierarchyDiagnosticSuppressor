@@ -42,6 +42,12 @@ Get on [nuget.org](https://www.nuget.org/packages/SvSoft.Analyzers.ClosedTypeHie
 There are no attributes and no configuration.
 It will just do The Right Thing™.
 
+The only exception is the configuration for opting into treating type hierarchies based on `record` types as closed, even though [they are not because of their implicit protected copy constructor](https://svenhuebner-it.com/closed-type-hierarchies-with-records-not/).
+
+```
+dotnet_diagnostic.CTH001.suppress_on_record_hierarchies
+```
+
 See the test samples for [switch statement](https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor/blob/main/ClosedTypeHierarchyDiagnosticSuppressor.Tests/SwitchStatementSuppressorTests.cs) and [switch expression](https://github.com/shuebner/ClosedTypeHierarchyDiagnosticSuppressor/blob/main/ClosedTypeHierarchyDiagnosticSuppressor.Tests/SwitchExpressionSuppressorTests.cs) to see what is supported.
 I may add more documentation and examples in this README soon.
 
