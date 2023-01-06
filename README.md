@@ -96,6 +96,9 @@ Your development experience may suffer.
 
 Thanks to [rutgersc](https://github.com/rutgersc) for [bringing this up](https://github.com/shuebner/OneOfDiagnosticSuppressor/issues/1).
 
+# Visual Studio for Mac
+[Visual Studio for Mac does not support Diagnostic Duppressors](https://developercommunity.visualstudio.com/t/Support-for-Diagnostic-Suppressors/10247137?q=Diagnostic+Suppressors) as of 2023-01-06.
+
 # Features
 
 ## NRT-aware
