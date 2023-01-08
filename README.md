@@ -74,7 +74,7 @@ dotnet_diagnostic.CS8509.severity = error
 
 If you set diagnostic severity to error for diagnostics that may be suppressed by a diagnostic suppressor like this one, you may have to take additional action for a good development experience.
 
-## Visual Studio
+## Visual Studio (for Windows)
 
 By default, Visual Studio does not run diagnostic suppressors when the build is implicitly triggered like by running a test.
 If you have errors that are suppressed by diagnostic suppressors, those builds will fail, e. g. preventing the test from running (unless you do an explicit build first).
@@ -96,8 +96,8 @@ Your development experience may suffer.
 
 Thanks to [rutgersc](https://github.com/rutgersc) for [bringing this up](https://github.com/shuebner/OneOfDiagnosticSuppressor/issues/1).
 
-# Visual Studio for Mac
-[Visual Studio for Mac does not support Diagnostic Duppressors](https://developercommunity.visualstudio.com/t/Support-for-Diagnostic-Suppressors/10247137?q=Diagnostic+Suppressors) as of 2023-01-06.
+## Visual Studio for Mac
+[Visual Studio for Mac does not support Diagnostic Suppressors](https://developercommunity.visualstudio.com/t/Support-for-Diagnostic-Suppressors/10247137?q=Diagnostic+Suppressors) as of 2023-01-06.
 
 # Features
 
