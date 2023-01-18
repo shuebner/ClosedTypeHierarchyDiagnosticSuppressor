@@ -18,14 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.1.0" />
   </ItemGroup>
 
   <!-- We need instances of some analyzers in the test project.
        Because they are internal classes we need to specify an assembly to load them from.
        Hence the dll reference. -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.11.0" IncludeAssets="None" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.1.0" IncludeAssets="None" GeneratePathProperty="true" />
     <Reference Include="$(PkgMicrosoft_CodeAnalysis_CSharp_CodeStyle)/analyzers/dotnet/cs/*.dll" />
   </ItemGroup>
 
