@@ -65,7 +65,9 @@ public static class TypeHierarchyHelper
             (IsRecord(rootCandidate) &&
             rootCandidate.Constructors.All(c => c.DeclaredAccessibility == Accessibility.Private || MatchesImplicitlyCreatedRecordCopyCtor(rootCandidate, c)));
 
+#pragma warning disable CS0162 // Unreachable code detected, FP, see https://github.com/dotnet/roslyn/issues/41429
         const string CompilerCreatedCloneMethodNameOnRecordTypes = "<Clone>$";
+#pragma warning restore CS0162 // Unreachable code detected
 
         static bool IsRecord(INamedTypeSymbol recordCandidate) =>
             recordCandidate.MemberNames.Contains(CompilerCreatedCloneMethodNameOnRecordTypes);
