@@ -13,6 +13,15 @@ namespace SvSoft.Analyzers.ClosedTypeHerarchyDiagnosticSuppression;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class SwitchExpressionSuppressor : DiagnosticSuppressor
 {
+    readonly bool _forceAllowRecords;
+
+    public SwitchExpressionSuppressor() : this(false) { }
+    
+    public SwitchExpressionSuppressor(bool forceAllowRecords)
+    {
+        _forceAllowRecords = forceAllowRecords;
+    }
+    
     static readonly string[] SuppressedDiagnosticIds = { "CS8509", "IDE0072" };
 
     public static readonly IReadOnlyDictionary<string, SuppressionDescriptor> SuppressionDescriptorByDiagnosticId = SuppressedDiagnosticIds.ToDictionary(
@@ -42,7 +51,7 @@ public sealed class SwitchExpressionSuppressor : DiagnosticSuppressor
                 return;
             }
 
-            bool allowRecords = context.AreRecordHierarchiesAllowed(node.SyntaxTree);
+            bool allowRecords = _forceAllowRecords || context.AreRecordHierarchiesAllowed(node.SyntaxTree);
 
             var switchExpression = node.DescendantNodesAndSelf().OfType<SwitchExpressionSyntax>().FirstOrDefault();
 

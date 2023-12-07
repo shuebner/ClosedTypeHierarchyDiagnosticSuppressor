@@ -20,9 +20,9 @@ class SwitchExpressionSuppressorTests
             nullableContextOptions,
             ("IDE0072", IDE0072Analyzer));
 
-    Task EnsureSuppressed(string code, NullableContextOptions nullableContextOptions) =>
+    Task EnsureSuppressed(string code, NullableContextOptions nullableContextOptions, bool allowRecords = false) =>
         DiagnosticSuppressorAnalyer.EnsureSuppressed(
-            new SwitchExpressionSuppressor(),
+            new SwitchExpressionSuppressor(allowRecords),
             SwitchExpressionSuppressor.SuppressionDescriptorByDiagnosticId.Values,
             code,
             nullableContextOptions,
@@ -86,6 +86,26 @@ static class SwitchTest
 ");
 
         return EnsureNotSuppressed(code, NullableContextOptions.Disable);
+    }
+    
+    [Test]
+    public Task When_record_with_destructure_And_all_subtypes_match_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.ProtectedCopyConstructorOnly.PositionalParameter + @"
+static class SwitchTest
+{
+    public static int DoSwitch(Root root)
+    {
+        return root switch
+        {
+            Root.Leaf1(var v) => 0,
+            Root.Leaf2 => 1,
+        };
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Enable, allowRecords: true);
     }
 
     [Test]
