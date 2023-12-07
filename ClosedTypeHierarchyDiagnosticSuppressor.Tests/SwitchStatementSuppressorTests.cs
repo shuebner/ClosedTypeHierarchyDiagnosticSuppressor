@@ -20,9 +20,9 @@ class SwitchStatementSuppressorTests
             nullableContextOptions,
             ("IDE0010", IDE0010Analyzer));
 
-    Task EnsureSuppressed(string code, NullableContextOptions nullableContextOptions) =>
+    Task EnsureSuppressed(string code, NullableContextOptions nullableContextOptions, bool allowRecords = false) =>
         DiagnosticSuppressorAnalyer.EnsureSuppressed(
-            new SwitchStatementSuppressor(),
+            new SwitchStatementSuppressor(allowRecords),
             SwitchStatementSuppressor.SuppressionDescriptorByDiagnosticId.Values,
             code,
             nullableContextOptions,
@@ -94,6 +94,28 @@ static class SwitchTest
         return EnsureNotSuppressed(code, NullableContextOptions.Disable);
     }
 
+    [Test]
+    public Task When_record_with_destructure_And_all_subtypes_match_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.ProtectedCopyConstructorOnly.PositionalParameter + @"
+static class SwitchTest
+{
+    public static void DoSwitch(Root root)
+    {
+        switch(root)
+        {
+            case Root.Leaf1(var v):
+                break;
+            case Root.Leaf2:
+                break;
+        }
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Enable, allowRecords: true);
+    }
+    
     [Test]
     public Task When_nullable_is_disabled_And_null_is_matched_on_its_own_Then_suppress()
     {

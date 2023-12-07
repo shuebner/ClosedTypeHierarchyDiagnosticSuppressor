@@ -50,6 +50,14 @@ abstract record Root
     public sealed record Leaf2 : Root {}
 }
 ";
+        public const string PositionalParameter = @"
+abstract record Root
+{
+    Root() {}
+    public sealed record Leaf1(int Value) : Root {}
+    public sealed record Leaf2 : Root {}
+}
+";
     }
 
     public static class NotClosed
