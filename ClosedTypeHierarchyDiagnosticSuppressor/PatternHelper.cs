@@ -51,7 +51,8 @@ static class PatternHelper
             };
 
         bool IsRecursivePatternNonRestrictive(RecursivePatternSyntax recursivePatternSyntax) =>
-            recursivePatternSyntax.PropertyPatternClause?.Subpatterns.All(IsSubpatternNonRestrictive) ?? false;
+            (recursivePatternSyntax.PropertyPatternClause?.Subpatterns ?? recursivePatternSyntax.PositionalPatternClause?.Subpatterns)
+            ?.All(IsSubpatternNonRestrictive) ?? false;
 
         bool IsDeclarationPatternNonRestrictive(DeclarationPatternSyntax declarationPatternSyntax, SubpatternSyntax containingSubpatternSyntax)
         {
