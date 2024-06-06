@@ -16,7 +16,8 @@ public sealed class SwitchStatementSuppressor : DiagnosticSuppressor
 
     public SwitchStatementSuppressor() : this(false) { }
     
-    public SwitchStatementSuppressor(bool forceAllowRecords)
+    /// <summary>Constructor to facilitate unit testing</summary>
+    internal SwitchStatementSuppressor(bool forceAllowRecords)
     {
         _forceAllowRecords = forceAllowRecords;
     }
