@@ -13,9 +13,9 @@ class SwitchStatementSuppressorTests
         "Microsoft.CodeAnalysis.CSharp.PopulateSwitch.CSharpPopulateSwitchStatementDiagnosticAnalyzer")?.Unwrap()
         ?? throw new InvalidOperationException("could not instantiate populate switch statement analyzer for IDE0072"));
 
-    Task EnsureNotSuppressed(string code, NullableContextOptions nullableContextOptions) =>
+    Task EnsureNotSuppressed(string code, NullableContextOptions nullableContextOptions, bool allowRecords = false) =>
         DiagnosticSuppressorAnalyer.EnsureNotSuppressed(
-            new SwitchStatementSuppressor(),
+            new SwitchStatementSuppressor(allowRecords),
             code,
             nullableContextOptions,
             ("IDE0010", IDE0010Analyzer));
@@ -114,6 +114,28 @@ static class SwitchTest
 ");
 
         return EnsureSuppressed(code, NullableContextOptions.Enable, allowRecords: true);
+    }
+    
+    [Test]
+    public Task When_record_with_destructure_And_only_base_type_is_matched_Then_do_not_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.ProtectedCopyConstructorOnly.PositionalParameter + @"
+static class SwitchTest
+{
+    public static void DoSwitch(Root root)
+    {
+        switch(root)
+        {
+            case Root.Leaf1(object v):
+                break;
+            case Root.Leaf2:
+                break;
+        };
+    }
+}
+");
+
+        return EnsureNotSuppressed(code, NullableContextOptions.Enable, allowRecords: true);
     }
     
     [Test]

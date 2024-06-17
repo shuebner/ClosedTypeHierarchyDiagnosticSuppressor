@@ -54,7 +54,7 @@ abstract record Root
 abstract record Root
 {
     Root() {}
-    public sealed record Leaf1(int Value) : Root {}
+    public sealed record Leaf1(string Value) : Root {}
     public sealed record Leaf2 : Root {}
 }
 ";
