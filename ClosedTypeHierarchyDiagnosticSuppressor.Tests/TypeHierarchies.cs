@@ -38,6 +38,48 @@ abstract class Root<T>
     public T Value { get; }
 }
 ";
+        public const string Deconstruct = @"
+abstract class Root
+{
+    Root() {}
+    public sealed class Leaf1 : Root
+    {
+        public Leaf1(object value, string s, object otherValue)
+        {
+            Value = value;
+            S = s;
+            OtherValue = otherValue;
+        }
+
+        public object Value { get; }
+        public string S { get; }
+        public object OtherValue { get; }
+
+        public void Deconstruct(out object value)
+        {
+            value = Value;
+        }
+
+        public void Deconstruct(out object value, out string s)
+        {
+            value = Value;
+            s = S;
+        }
+    }
+
+    public sealed class Leaf2 : Root {}
+}
+
+static class RootExtensions
+{
+    public static void Deconstruct(this Root.Leaf1 leaf1, out object value, out string s, out object otherValue) 
+    {
+        value = leaf1.Value;
+        s = leaf1.S;
+        otherValue = leaf1.OtherValue;
+    }
+}
+";
     }
 
     public static class ProtectedCopyConstructorOnly

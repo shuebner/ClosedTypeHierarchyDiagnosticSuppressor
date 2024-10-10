@@ -95,6 +95,94 @@ static class SwitchTest
     }
 
     [Test]
+    public Task When_type_with_destructure_And_all_subtypes_match_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Deconstruct + @"
+static class SwitchTest
+{
+    public static void DoSwitch(Root root)
+    {
+        switch(root)
+        {
+            case Root.Leaf1(object value):
+                break;
+            case Root.Leaf2:
+                break;
+        }
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Enable);
+    }
+
+    [Test]
+    public Task When_type_with_destructure_And_other_Deconstruct_methods_has_all_subtypes_match_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Deconstruct + @"
+static class SwitchTest
+{
+    public static void DoSwitch(Root root)
+    {
+        switch(root)
+        {
+            case Root.Leaf1(object value, string s):
+                break;
+            case Root.Leaf2:
+                break;
+        }
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Enable);
+    }
+
+    [Test]
+    public Task When_type_with_destructure_extension_method_has_all_subtypes_match_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Deconstruct + @"
+static class SwitchTest
+{
+    public static void DoSwitch(Root root)
+    {
+        switch(root)
+        {
+            case Root.Leaf1(object value, string s, object otherValue):
+                break;
+            case Root.Leaf2:
+                break;
+        }
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Enable);
+    }
+
+    [Test]
+    public Task When_type_with_destructure_And_only_base_type_is_matched_Then_do_not_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Deconstruct + @"
+static class SwitchTest
+{
+    public static void DoSwitch(Root root)
+    {
+        switch(root)
+        {
+            case Root.Leaf1(string value):
+                break;
+            case Root.Leaf2:
+                break;
+        };
+    }
+}
+");
+
+        return EnsureNotSuppressed(code, NullableContextOptions.Enable);
+    }
+    
+    [Test]
     public Task When_nullable_is_disabled_And_null_is_matched_on_its_own_Then_suppress()
     {
         var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Simple + @"

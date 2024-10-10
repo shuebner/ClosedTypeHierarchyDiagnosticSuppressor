@@ -87,6 +87,86 @@ static class SwitchTest
 
         return EnsureNotSuppressed(code, NullableContextOptions.Disable);
     }
+    
+    [Test]
+    public Task When_type_with_destructure_And_all_subtypes_match_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Deconstruct + @"
+static class SwitchTest
+{
+    public static int DoSwitch(Root root)
+    {
+        return root switch
+        {
+            Root.Leaf1(object value) => 0,
+            Root.Leaf2 => 1,
+        };
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Enable);
+    }
+
+    [Test]
+    public Task When_type_with_destructure_And_other_Deconstruct_methods_has_all_subtypes_match_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Deconstruct + @"
+static class SwitchTest
+{
+    public static int DoSwitch(Root root)
+    {
+        return root switch
+        {
+            Root.Leaf1(object value, string s) => 0,
+            Root.Leaf2 => 1,
+        };
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Enable);
+    }
+
+    [Test]
+    public Task When_type_with_destructure_extension_method_has_all_subtypes_match_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Deconstruct + @"
+static class SwitchTest
+{
+    public static int DoSwitch(Root root)
+    {
+        return root switch
+        {
+            Root.Leaf1(object value, string s, object otherValue) => 0,
+            Root.Leaf2 => 1,
+        };
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Enable);
+    }
+
+    [Test]
+    public Task When_type_with_destructure_And_only_base_type_is_matched_Then_do_not_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Deconstruct + @"
+static class SwitchTest
+{
+    public static int DoSwitch(Root root)
+    {
+        return root switch
+        {
+            Root.Leaf1(string value) => 0,
+            Root.Leaf2 => 1,
+        };
+    }
+}
+");
+
+        return EnsureNotSuppressed(code, NullableContextOptions.Enable);
+    }
 
     [Test]
     public Task When_nullable_is_disabled_And_null_is_matched_on_its_own_Then_suppress()

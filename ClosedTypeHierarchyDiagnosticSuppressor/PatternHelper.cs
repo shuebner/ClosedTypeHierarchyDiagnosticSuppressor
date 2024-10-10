@@ -39,21 +39,23 @@ static class PatternHelper
             _ => matchedTypeIsSubtype
         };
 
-        bool IsSubpatternNonRestrictive(SubpatternSyntax subpatternSyntax) =>
+        bool IsRecursivePatternNonRestrictive(RecursivePatternSyntax recursivePatternSyntax) =>
+            (recursivePatternSyntax.PropertyPatternClause?.Subpatterns ?? recursivePatternSyntax.PositionalPatternClause?.Subpatterns)
+            ?.Select((p, i) => (Pattern: p, Index: i)).All(pair => IsSubpatternNonRestrictive(pair.Pattern, pair.Index)) ?? false;
+
+        bool IsSubpatternNonRestrictive(SubpatternSyntax subpatternSyntax, int index) =>
             subpatternSyntax.Pattern switch
             {
                 VarPatternSyntax => true,
                 RecursivePatternSyntax sub => IsRecursivePatternNonRestrictive(sub),
-                DeclarationPatternSyntax declaration => IsDeclarationPatternNonRestrictive(declaration, subpatternSyntax),
+                DeclarationPatternSyntax declaration => IsDeclarationPatternNonRestrictive(declaration, subpatternSyntax, index),
                 _ => false
-
-
             };
 
-        bool IsRecursivePatternNonRestrictive(RecursivePatternSyntax recursivePatternSyntax) =>
-            recursivePatternSyntax.PropertyPatternClause?.Subpatterns.All(IsSubpatternNonRestrictive) ?? false;
-
-        bool IsDeclarationPatternNonRestrictive(DeclarationPatternSyntax declarationPatternSyntax, SubpatternSyntax containingSubpatternSyntax)
+        bool IsDeclarationPatternNonRestrictive(
+            DeclarationPatternSyntax declarationPatternSyntax,
+            SubpatternSyntax containingSubpatternSyntax,
+            int index)
         {
             SymbolInfo declaredSymbolInfo = model.GetSymbolInfo(declarationPatternSyntax.Type);
 
@@ -65,6 +67,23 @@ static class PatternHelper
                     if (maybePropertySymbol is IPropertySymbol propertySymbol)
                     {
                         if (compilation.HasImplicitConversion(propertySymbol.Type, declaredType))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                if (containingSubpatternSyntax is { Parent: PositionalPatternClauseSyntax positionalPattern, Pattern: DeclarationPatternSyntax declaration })
+                {
+                    var symbol = model.GetSymbolInfo(positionalPattern).Symbol;
+                    if (symbol is IMethodSymbol { Name: "Deconstruct" } deconstructMethod)
+                    {
+                        var correspondingParameterIndex = deconstructMethod.IsExtensionMethod
+                            ? index + 1
+                            : index;
+                        var positionalType = deconstructMethod.Parameters[correspondingParameterIndex].Type;
+
+                        if (compilation.HasImplicitConversion(positionalType, declaredType))
                         {
                             return true;
                         }
