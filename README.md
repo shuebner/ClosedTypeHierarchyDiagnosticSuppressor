@@ -86,8 +86,7 @@ See also [here](https://developercommunity2.visualstudio.com/t/Test-run-fails-bu
 
 ## Rider
 
-[Rider does not support Diagnostic Suppressors](https://youtrack.jetbrains.com/issue/RSRP-481121) as of 2022-07-31.
-Your development experience may suffer.
+Support is planned for 2025.2 EAP 1 (see https://youtrack.jetbrains.com/issue/RIDER-45021/Support-Roslyn-based-suppressors).
 
 ## Visual Studio Code
 
