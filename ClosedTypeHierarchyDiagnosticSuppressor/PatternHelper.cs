@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
 
@@ -7,6 +8,12 @@ static class PatternHelper
 {
     public static bool HandlesTypeWithoutRestrictions(PatternSyntax patternSyntax, INamedTypeSymbol type, SemanticModel model, Compilation compilation)
     {
+        if (patternSyntax is BinaryPatternSyntax binaryPattern && binaryPattern.Kind() == SyntaxKind.OrPattern)
+        {
+            return HandlesTypeWithoutRestrictions(binaryPattern.Right, type, model, compilation)
+                || HandlesTypeWithoutRestrictions(binaryPattern.Left, type, model, compilation);
+        }
+
         SyntaxNode? typeSource = patternSyntax switch
         {
             ConstantPatternSyntax constantPattern => constantPattern.Expression switch
@@ -94,4 +101,15 @@ static class PatternHelper
             return false;
         }
     }
+
+    public static bool HandlesNull(PatternSyntax p) =>
+        p switch
+        {
+            // "_" matches null
+            DiscardPatternSyntax => true,
+            // "null" matches null
+            ConstantPatternSyntax { Expression: LiteralExpressionSyntax { Token: SyntaxToken { Value: null } } } => true,
+            BinaryPatternSyntax b when b.Kind() is Microsoft.CodeAnalysis.CSharp.SyntaxKind.OrPattern => HandlesNull(b.Right) || HandlesNull(b.Left),
+            _ => false
+        };
 }

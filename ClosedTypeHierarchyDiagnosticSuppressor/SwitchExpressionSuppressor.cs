@@ -94,10 +94,7 @@ public sealed class SwitchExpressionSuppressor : DiagnosticSuppressor
 
             static bool HandlesNullCase(SwitchExpressionArmSyntax a) =>
                 // we bail at when clauses and do not try to understand them
-                // both "_" and "null" match null
-                a.WhenClause is null && a.Pattern is
-                    DiscardPatternSyntax or
-                    ConstantPatternSyntax { Expression: LiteralExpressionSyntax { Token: SyntaxToken { Value: null } } };
+                a.WhenClause is null && PatternHelper.HandlesNull(a.Pattern);
 
             bool ArmHandlesTypeWithoutRestrictions(SwitchExpressionArmSyntax a, INamedTypeSymbol t) =>
                 // we bail at when clauses and do not try to understand them

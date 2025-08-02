@@ -76,7 +76,12 @@ public sealed class SwitchStatementSuppressor : DiagnosticSuppressor
                     s.Labels.Any(LabelHandlesNullCase);
 
                 static bool LabelHandlesNullCase(SwitchLabelSyntax s) =>
-                    s is CaseSwitchLabelSyntax { Value: LiteralExpressionSyntax { Token: SyntaxToken { Value: null } } };
+                    s switch
+                    {
+                        CaseSwitchLabelSyntax { Value: LiteralExpressionSyntax { Token: SyntaxToken { Value: null } } } => true,
+                        CasePatternSwitchLabelSyntax { Pattern: var p } => PatternHelper.HandlesNull(p),
+                        _ => false
+                    };
 
                 bool SectionHandlesTypeWithoutRestrictions(SwitchSectionSyntax s, INamedTypeSymbol t) =>
                     s.Labels.Any(s => LabelHandlesTypeWithoutRestriction(s, t));

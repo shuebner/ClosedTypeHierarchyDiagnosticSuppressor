@@ -538,4 +538,80 @@ static class SwitchTest
 
         return EnsureSuppressed(code, NullableContextOptions.Enable);
     }
+
+    [Test]
+    public Task When_nullable_is_enabled_And_subtype_matching_is_exhaustive_via_binary_or_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Simple + @"
+static class SwitchTest
+{
+    public static int DoSwitch(Root root)
+    {
+        return root switch
+        {
+            Root.Leaf1 or Root.Leaf2 => 0,
+        };
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Enable);
+    }
+
+    [Test]
+    public Task When_nullable_is_enabled_And_subtype_matching_is_not_exhaustive_via_binary_or_Then_do_not_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Nested + @"
+static class SwitchTest
+{
+    public static int DoSwitch(Root root)
+    {
+        return root switch
+        {
+            Root.Leaf1 or Root.Intermediate.Leaf2 => 0,
+        };
+    }
+}
+");
+
+        return EnsureNotSuppressed(code, NullableContextOptions.Enable);
+    }
+
+    [Test]
+    public Task When_nullable_is_disabled_And_subtype_matching_is_exhaustive_via_binary_or_Then_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Simple + @"
+static class SwitchTest
+{
+    public static int DoSwitch(Root root)
+    {
+        return root switch
+        {
+            Root.Leaf1 or Root.Leaf2 or null => 0,
+        };
+    }
+}
+");
+
+        return EnsureSuppressed(code, NullableContextOptions.Disable);
+    }
+
+    [Test]
+    public Task When_nullable_is_disabled_And_subtype_matching_is_not_exhaustive_via_binary_or_Then_do_not_suppress()
+    {
+        var code = CodeHelper.WrapInNamespace(TypeHierarchies.Closed.Simple + @"
+static class SwitchTest
+{
+    public static int DoSwitch(Root root)
+    {
+        return root switch
+        {
+            Root.Leaf1 or Root.Leaf2 => 0,
+        };
+    }
+}
+");
+
+        return EnsureNotSuppressed(code, NullableContextOptions.Disable);
+    }
 }
