@@ -11,7 +11,7 @@ class SwitchStatementSuppressorTests
     static readonly DiagnosticAnalyzer IDE0010Analyzer = (DiagnosticAnalyzer)(Activator.CreateInstance(
         "Microsoft.CodeAnalysis.CSharp.CodeStyle",
         "Microsoft.CodeAnalysis.CSharp.PopulateSwitch.CSharpPopulateSwitchStatementDiagnosticAnalyzer")?.Unwrap()
-        ?? throw new InvalidOperationException("could not instantiate populate switch statement analyzer for IDE0072"));
+        ?? throw new InvalidOperationException("could not instantiate populate switch statement analyzer for IDE0010"));
 
     Task EnsureNotSuppressed(string code, NullableContextOptions nullableContextOptions) =>
         DiagnosticSuppressorAnalyer.EnsureNotSuppressed(
